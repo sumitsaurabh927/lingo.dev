@@ -1,0 +1,1 @@
+---\n"@lingo.dev": minor\n---\n\nAdd Biome formatter loader as an alternative to Prettier for HTML formatting
