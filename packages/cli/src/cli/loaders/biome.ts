@@ -20,8 +20,8 @@ export default function createBiomeLoader(
         return data;
       }
 
-      const draftPath = options.bucketPathPattern.replace(
-        /\[locale\]/g,
+      const draftPath = options.bucketPathPattern.replaceAll(
+        "[locale]",
         locale,
       );
       const finalPath = path.resolve(draftPath);
@@ -33,8 +33,8 @@ export default function createBiomeLoader(
         return data;
       }
 
-      const draftPath = options.bucketPathPattern.replace(
-        /\[locale\]/g,
+      const draftPath = options.bucketPathPattern.replaceAll(
+        "[locale]",
         locale,
       );
       const finalPath = path.resolve(draftPath);
@@ -59,8 +59,7 @@ async function formatDataWithBiome(
     });
 
     try {
-      const ext = path.extname(filePath);
-      const formattedPath = `file${ext || `.${options.parser}`}`;
+      const formattedPath = `file.${options.parser}`;
       
       const result = biome.formatContent(data, {
         filePath: formattedPath,

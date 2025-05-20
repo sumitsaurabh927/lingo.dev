@@ -15,6 +15,8 @@ describe("biome loader", () => {
       bucketPathPattern: "/test/[locale]/test.js" 
     });
     
+    loader.setDefaultLocale("en");
+    
     const result = await loader.pull("en", input);
     
     expect(result).not.toBe(input);
@@ -34,6 +36,8 @@ describe("biome loader", () => {
       bucketPathPattern: "/test/[locale]/test.ts" 
     });
     
+    loader.setDefaultLocale("en");
+    
     const result = await loader.pull("en", input);
     
     expect(result).not.toBe(input);
@@ -50,6 +54,8 @@ describe("biome loader", () => {
       parser: "json", 
       bucketPathPattern: "/test/[locale]/test.json" 
     });
+    
+    loader.setDefaultLocale("en");
     
     const result = await loader.pull("en", input);
     
@@ -70,6 +76,8 @@ describe("biome loader", () => {
       stage: "push"
     });
     
+    loader.setDefaultLocale("en");
+    
     const result = await loader.pull("en", input);
     
     expect(result).toBe(input);
@@ -88,6 +96,9 @@ describe("biome loader", () => {
       stage: "pull"
     });
     
+    loader.setDefaultLocale("en");
+    
+    await loader.pull("en", input);
     const result = await loader.push("en", input);
     
     expect(result).toBe(input);
@@ -100,6 +111,8 @@ describe("biome loader", () => {
       parser: "js", 
       bucketPathPattern: "/test/[locale]/test.js" 
     });
+    
+    loader.setDefaultLocale("en");
     
     const result = await loader.pull("en", input);
     

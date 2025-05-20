@@ -84,7 +84,7 @@ export default function createBucketLoader(
     case "html":
       return composeLoaders(
         createTextFileLoader(bucketPathPattern),
-        createBiomeLoader({ parser: "html", bucketPathPattern }),
+        createPrettierLoader({ parser: "html", bucketPathPattern }),
         createHtmlLoader(),
         createSyncLoader(),
         createUnlocalizableLoader(
@@ -95,7 +95,7 @@ export default function createBucketLoader(
     case "json":
       return composeLoaders(
         createTextFileLoader(bucketPathPattern),
-        createBiomeLoader({ parser: "json", bucketPathPattern }),
+        createPrettierLoader({ parser: "json", bucketPathPattern }),
         createJsonLoader(),
         createInjectLocaleLoader(options.injectLocale),
         createFlatLoader(),
@@ -109,7 +109,7 @@ export default function createBucketLoader(
     case "markdown":
       return composeLoaders(
         createTextFileLoader(bucketPathPattern),
-        createBiomeLoader({ parser: "markdown", bucketPathPattern }),
+        createPrettierLoader({ parser: "markdown", bucketPathPattern }),
         createMarkdownLoader(),
         createSyncLoader(),
         createUnlocalizableLoader(
@@ -120,7 +120,7 @@ export default function createBucketLoader(
     case "mdx":
       return composeLoaders(
         createTextFileLoader(bucketPathPattern),
-        createBiomeLoader({
+        createPrettierLoader({
           parser: "mdx",
           bucketPathPattern,
         }),
@@ -197,7 +197,7 @@ export default function createBucketLoader(
     case "yaml":
       return composeLoaders(
         createTextFileLoader(bucketPathPattern),
-        createBiomeLoader({ parser: "yaml", bucketPathPattern }),
+        createPrettierLoader({ parser: "yaml", bucketPathPattern }),
         createYamlLoader(),
         createFlatLoader(),
         createLockedKeysLoader(lockedKeys || [], options.isCacheRestore),
@@ -210,7 +210,7 @@ export default function createBucketLoader(
     case "yaml-root-key":
       return composeLoaders(
         createTextFileLoader(bucketPathPattern),
-        createBiomeLoader({ parser: "yaml", bucketPathPattern }),
+        createPrettierLoader({ parser: "yaml", bucketPathPattern }),
         createYamlLoader(),
         createRootKeyLoader(true),
         createFlatLoader(),
@@ -310,7 +310,7 @@ export default function createBucketLoader(
     case "typescript":
       return composeLoaders(
         createTextFileLoader(bucketPathPattern),
-        createBiomeLoader({ parser: "typescript", bucketPathPattern }),
+        createPrettierLoader({ parser: "typescript", bucketPathPattern }),
         createTypescriptLoader(),
         createFlatLoader(),
         createSyncLoader(),
