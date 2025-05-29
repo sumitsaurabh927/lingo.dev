@@ -421,47 +421,36 @@ export const configV1_9Definition = extendConfigDefinition(
     createDefaultValue: (baseDefaultValue) => ({
       ...baseDefaultValue,
       version: 1.9,
-      providers: {
-        groq: true,
-        openai: true,
-        anthropic: true,
-      },
-      models: {
-        "*:*": "groq/mistral-7b-instruct",
-      },
-      prompt: "You're a helpful assistant that translates between languages.",
+      prompt: "You're a precise, context-aware localization tool, that besides translating between languages transfers the meaning and intent of the input.",
     }),
     createUpgrader: (oldConfig) => {
       const upgradedConfig = {
         ...oldConfig,
         version: 1.9,
-        providers: {} as Record<string, boolean | { baseUrl?: string; prompt?: string }>,
-        models: {} as Record<string, string>,
-        prompt: "" as string,
+        prompt: "You're a precise, context-aware localization tool, that besides translating between languages transfers the meaning and intent of the input.",
       };
 
       if (oldConfig.provider) {
-        upgradedConfig.providers = {
-          [oldConfig.provider.id]: true,
+        const providers: Record<string, boolean | { baseUrl?: string; prompt?: string }> = {};
+        providers[oldConfig.provider.id] = oldConfig.provider.baseUrl || oldConfig.provider.prompt
+          ? { 
+              ...(oldConfig.provider.baseUrl && { baseUrl: oldConfig.provider.baseUrl }),
+              ...(oldConfig.provider.prompt && { prompt: oldConfig.provider.prompt })
+            }
+          : true;
+        
+        const models: Record<string, string> = {
+          "*:*": `${oldConfig.provider.id}/${oldConfig.provider.model}`
         };
-
-        upgradedConfig.models = {
-          "*:*": `${oldConfig.provider.id}/${oldConfig.provider.model}`,
-        };
-
-        upgradedConfig.prompt = oldConfig.provider.prompt;
-      } else {
-        upgradedConfig.providers = {
-          groq: true,
-          openai: true,
-          anthropic: true,
-        };
-        upgradedConfig.models = {
-          "*:*": "groq/mistral-7b-instruct",
-        };
-        upgradedConfig.prompt = "You're a helpful assistant that translates between languages.";
+        
+        (upgradedConfig as any).providers = providers;
+        (upgradedConfig as any).models = models;
+        
+        if (oldConfig.provider.prompt) {
+          upgradedConfig.prompt = oldConfig.provider.prompt;
+        }
       }
-
+      
       return upgradedConfig;
     },
   },
