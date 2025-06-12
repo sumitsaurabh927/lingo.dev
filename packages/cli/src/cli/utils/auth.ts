@@ -36,18 +36,27 @@ export function createAuthenticator(params: AuthenticatorParams) {
         }
 
         if (res.status >= 500 && res.status < 600) {
-          const cloudflareStatus = await checkCloudflareStatus();
-          let errorMessage = `Server error (${res.status}): ${res.statusText}. Please try again later.`;
+          const originalErrorMessage = `Server error (${res.status}): ${res.statusText}. Please try again later.`;
           
-          if (cloudflareStatus) {
-            const cloudflareMessage = formatCloudflareStatusMessage(cloudflareStatus);
-            if (cloudflareMessage) {
-              errorMessage += `\n\n${cloudflareMessage}`;
-            }
+          const cloudflareStatus = await checkCloudflareStatus();
+          
+          if (!cloudflareStatus) {
+            throw new CLIError({
+              message: originalErrorMessage,
+              docUrl: "connectionFailed",
+            });
           }
-
+          
+          if (cloudflareStatus.status.indicator !== 'none') {
+            const cloudflareMessage = formatCloudflareStatusMessage(cloudflareStatus);
+            throw new CLIError({
+              message: cloudflareMessage,
+              docUrl: "connectionFailed",
+            });
+          }
+          
           throw new CLIError({
-            message: errorMessage,
+            message: originalErrorMessage,
             docUrl: "connectionFailed",
           });
         }
