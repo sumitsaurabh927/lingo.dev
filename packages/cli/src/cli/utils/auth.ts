@@ -1,4 +1,5 @@
 import { CLIError } from "./errors";
+import { checkCloudflareStatus, formatCloudflareStatusMessage } from "./cloudflare-status";
 
 export type AuthenticatorParams = {
   apiUrl: string;
@@ -34,8 +35,29 @@ export function createAuthenticator(params: AuthenticatorParams) {
           };
         }
 
+        if (res.status >= 500 && res.status < 600) {
+          const cloudflareStatus = await checkCloudflareStatus();
+          let errorMessage = `Server error (${res.status}): ${res.statusText}. Please try again later.`;
+          
+          if (cloudflareStatus) {
+            const cloudflareMessage = formatCloudflareStatusMessage(cloudflareStatus);
+            if (cloudflareMessage) {
+              errorMessage += `\n\n${cloudflareMessage}`;
+            }
+          }
+
+          throw new CLIError({
+            message: errorMessage,
+            docUrl: "connectionFailed",
+          });
+        }
+
         return null;
       } catch (error) {
+        if (error instanceof CLIError) {
+          throw error;
+        }
+
         const isNetworkError =
           error instanceof TypeError && error.message === "fetch failed";
         if (isNetworkError) {
