@@ -34,6 +34,14 @@ export function createAuthenticator(params: AuthenticatorParams) {
           };
         }
 
+        const isServerError = res.status >= 500 && res.status < 600;
+        if (isServerError) {
+          throw new CLIError({
+            message: `Failed to connect to the API at ${params.apiUrl}. Please check your connection and try again.`,
+            docUrl: "connectionFailed",
+          });
+        }
+
         return null;
       } catch (error) {
         const isNetworkError =
