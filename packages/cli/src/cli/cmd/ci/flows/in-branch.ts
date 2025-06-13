@@ -1,13 +1,54 @@
-import { execSync } from "node:child_process";
+import { execSync } from "child_process";
 import path from "path";
+import fs from "fs";
+import os from "os";
 import {
   gitConfig,
   IntegrationFlow,
   IIntegrationFlowOptions,
 } from "./_base";
-import { removeFile, listDirectory, getCurrentDirectory, escapeShellArg } from "../../utils/shell";
 import i18nCmd from "../../i18n";
 import runCmd from "../../run";
+
+function removeFile(filePath: string): void {
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  } catch (error) {
+  }
+}
+
+function getCurrentDirectory(): string {
+  return process.cwd();
+}
+
+function listDirectory(dirPath: string = "."): string {
+  try {
+    const files = fs.readdirSync(dirPath, { withFileTypes: true });
+    return files
+      .map(file => {
+        const stats = fs.statSync(path.join(dirPath, file.name));
+        const permissions = stats.mode.toString(8).slice(-3);
+        const size = stats.size;
+        const modified = stats.mtime.toISOString().slice(0, 19).replace('T', ' ');
+        return `${file.isDirectory() ? 'd' : '-'}${permissions} ${size.toString().padStart(8)} ${modified} ${file.name}`;
+      })
+      .join('\n');
+  } catch (error) {
+    return execSync(os.platform() === 'win32' ? 'dir' : 'ls -la', { 
+      encoding: 'utf8',
+      cwd: dirPath
+    });
+  }
+}
+
+function escapeShellArg(arg: string): string {
+  if (os.platform() === 'win32') {
+    return `"${arg.replace(/"/g, '""')}"`;
+  }
+  return `'${arg.replace(/'/g, "'\\''")}'`;
+}
 
 export class InBranchFlow extends IntegrationFlow {
   async preRun() {
