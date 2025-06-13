@@ -1,7 +1,6 @@
+import * as fs from "fs";
+import * as path from "path";
 import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
-import os from "os";
 
 export interface ShellOptions {
   stdio?: "inherit" | "pipe";
@@ -18,6 +17,10 @@ export function removeFile(filePath: string): void {
   }
 }
 
+export function getCurrentDirectory(): string {
+  return process.cwd();
+}
+
 export function listDirectory(dirPath: string = ".", options: ShellOptions = {}): string {
   try {
     const files = fs.readdirSync(dirPath, { withFileTypes: true });
@@ -31,16 +34,20 @@ export function listDirectory(dirPath: string = ".", options: ShellOptions = {})
       })
       .join('\n');
   } catch (error) {
-    return execSync(os.platform() === 'win32' ? 'dir' : 'ls -la', { 
-      encoding: 'utf8',
-      cwd: dirPath,
-      ...options 
-    });
+    try {
+      return execSync('ls -la', { 
+        encoding: 'utf8',
+        cwd: dirPath,
+        ...options 
+      });
+    } catch {
+      return execSync('dir', { 
+        encoding: 'utf8',
+        cwd: dirPath,
+        ...options 
+      });
+    }
   }
-}
-
-export function getCurrentDirectory(): string {
-  return process.cwd();
 }
 
 export function executeCommand(command: string, options: ShellOptions = {}): string {
@@ -51,8 +58,9 @@ export function executeCommand(command: string, options: ShellOptions = {}): str
 }
 
 export function escapeShellArg(arg: string): string {
-  if (os.platform() === 'win32') {
+  if (arg.includes("'") && !arg.includes('"')) {
     return `"${arg.replace(/"/g, '""')}"`;
+  } else {
+    return `'${arg.replace(/'/g, "'\\''")}'`;
   }
-  return `'${arg.replace(/'/g, "'\\''")}'`;
 }

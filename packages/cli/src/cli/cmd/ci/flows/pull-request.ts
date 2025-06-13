@@ -1,14 +1,7 @@
 import { execSync } from "child_process";
-import os from "os";
 import { InBranchFlow } from "./in-branch";
 import { IIntegrationFlowOptions } from "./_base";
-
-function escapeShellArg(arg: string): string {
-  if (os.platform() === 'win32') {
-    return `"${arg.replace(/"/g, '""')}"`;
-  }
-  return `'${arg.replace(/'/g, "'\\''")}'`;
-}
+import { escapeShellArg } from "../../../utils/shell";
 
 export class PullRequestFlow extends InBranchFlow {
   async preRun() {
