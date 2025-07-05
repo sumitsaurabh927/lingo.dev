@@ -13,9 +13,7 @@ export function getConfig(resave = true): I18nConfig | null {
   }
 
   const fileContents = fs.readFileSync(configFilePath, "utf8");
-  const rawConfig = parseJSONC(fileContents, undefined, {
-    allowTrailingComma: true,
-  }) as unknown;
+  const rawConfig = parseJSONC(fileContents) as unknown;
 
   const result = parseI18nConfig(rawConfig);
   const didConfigChange = !_.isEqual(rawConfig, result);
