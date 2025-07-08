@@ -22,25 +22,24 @@ vi.mock("../utils/fs", () => ({
 
 // Import MD5 after mocking
 import { MD5 } from "object-hash";
-import { md5 } from "./md5";
 
 describe("createDeltaProcessor", () => {
   const mockFileKey = "test-file-key";
-  let mockProcessor;
+  let processor;
 
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset the mock implementation for MD5
     (MD5 as any).mockImplementation((value) => `mocked-hash-${value}`);
     // Create a new processor instance for each test
-    mockProcessor = createDeltaProcessor(mockFileKey);
+    processor = createDeltaProcessor(mockFileKey);
   });
 
   describe("checkIfLockExists", () => {
     it("should call checkIfFileExists with the correct path", async () => {
       (checkIfFileExists as any).mockResolvedValue(true);
 
-      const result = await mockProcessor.checkIfLockExists();
+      const result = await processor.checkIfLockExists();
 
       expect(path.join).toHaveBeenCalledWith(process.cwd(), "i18n.lock");
       expect(checkIfFileExists).toHaveBeenCalledWith("/mocked/path/i18n.lock");
@@ -49,93 +48,180 @@ describe("createDeltaProcessor", () => {
   });
 
   describe("calculateDelta", () => {
-    it("should correctly identify added keys", async () => {
-      const key3Checksum = md5("value3");
-      const sourceData = { key1: "value1", key2: "value2", key3: "value3" };
-      const targetData = { key1: "value1" };
-      const checksums = { key1: "invalid-checksum1", key3: key3Checksum };
+    describe("added", () => {
+      it("should correctly identify added keys", async () => {
+        const sourceData = { key1: "value1", key2: "value2", key3: "value3" };
+        const targetData = { key1: "value1" };
+        const checksums = { key1: "invalid-checksum1" };
 
-      const result = await mockProcessor.calculateDelta({
-        sourceData,
-        targetData,
-        checksums,
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
+
+        expect(result.added).toEqual(["key2", "key3"]);
+        expect(result.hasChanges).toBe(true);
       });
 
-      expect(result.added).toEqual(["key2"]);
-      expect(result.hasChanges).toBe(true);
+      it("should correctly identify added keys based on checksums", async () => {
+        const sourceData = { key1: "value1", key2: "value2", key3: "value3" };
+        const targetData = { key1: "value1" };
+        const checksums = {
+          key1: "invalid-checksum1",
+          key3: "mocked-hash-value3",
+        };
+
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
+
+        expect(result.added).toEqual(["key2"]);
+        expect(result.hasChanges).toBe(true);
+      });
     });
 
-    it("should correctly identify removed keys", async () => {
-      const sourceData = { key1: "value1" };
-      const targetData = { key1: "value1", key2: "value2" };
-      const checksums = { key1: "checksum1", key2: "checksum2" };
+    describe("removed", () => {
+      it("should correctly identify removed keys", async () => {
+        const sourceData = { key1: "value1" };
+        const targetData = { key1: "value1", key2: "value2" };
+        const checksums = { key1: "checksum1", key2: "checksum2" };
 
-      const result = await mockProcessor.calculateDelta({
-        sourceData,
-        targetData,
-        checksums,
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
+
+        expect(result.removed).toEqual(["key2"]);
+        expect(result.hasChanges).toBe(true);
       });
-
-      expect(result.removed).toEqual(["key2"]);
-      expect(result.hasChanges).toBe(true);
     });
 
-    it("should correctly identify updated keys", async () => {
-      const sourceData = { key1: "new-value1" };
-      const targetData = { key1: "value1" };
-      const checksums = { key1: "old-checksum" }; // Different from MD5(new-value1)
+    describe("updated", () => {
+      it("should correctly identify updated keys", async () => {
+        const sourceData = { key1: "new-value1" };
+        const targetData = { key1: "value1" };
+        const checksums = { key1: "old-checksum" }; // Different from MD5(new-value1)
 
-      const result = await mockProcessor.calculateDelta({
-        sourceData,
-        targetData,
-        checksums,
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
+
+        expect(result.updated).toContain("key1");
+        expect(result.hasChanges).toBe(true);
       });
-
-      expect(result.updated).toContain("key1");
-      expect(result.hasChanges).toBe(true);
     });
 
-    it("should correctly identify renamed keys", async () => {
-      // Mock to simulate a renamed key (same hash but different key name)
-      (MD5 as any).mockImplementation((value) =>
-        value === "value1" ? "same-hash" : "other-hash",
-      );
+    describe("renamed", () => {
+      it("should correctly identify renamed keys", async () => {
+        const sourceData = { newKey: "value1" };
+        const targetData = { oldKey: "something" };
+        const checksums = { oldKey: "mocked-hash-value1" };
 
-      const sourceData = { newKey: "value1" };
-      const targetData = { oldKey: "something" };
-      const checksums = { oldKey: "same-hash" };
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
 
-      const result = await mockProcessor.calculateDelta({
-        sourceData,
-        targetData,
-        checksums,
+        expect(result.renamed).toEqual([["oldKey", "newKey"]]);
+        expect(result.added).toEqual([]);
+        expect(result.removed).toEqual([]);
+        expect(result.hasChanges).toBe(true);
       });
 
-      expect(result.renamed).toEqual([["oldKey", "newKey"]]);
-      expect(result.added).toEqual([]);
-      expect(result.removed).toEqual([]);
-      expect(result.hasChanges).toBe(true);
+      it("should correctly identify renamed f keys", async () => {
+        const sourceData = { newKey: "value1" };
+        const targetData = { oldKey: "something" };
+        const checksums = { oldKey: "mocked-hash-value1" };
+
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
+
+        expect(result.renamed).toEqual([["oldKey", "newKey"]]);
+        expect(result.added).toEqual([]);
+        expect(result.removed).toEqual([]);
+        expect(result.hasChanges).toBe(true);
+      });
+
+      it("should correctly identify renamed sequential keys (eg. for Markdown)", async () => {
+        const sourceData = {
+          section1: "value1",
+          section2: "new-value2",
+          section3: "new-value3",
+          section4: "original-value2",
+          section5: "original-value3",
+        };
+        const targetData = {};
+        const checksums = {
+          section1: "mocked-hash-value1",
+          section2: "mocked-hash-original-value2",
+          section3: "mocked-hash-original-value3",
+        };
+
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
+
+        expect(result.renamed).toEqual([
+          ["section2", "section4"],
+          ["section3", "section5"],
+        ]);
+        expect(result.added).toEqual(["section2", "section3"]);
+        expect(result.removed).toEqual([]);
+        expect(result.hasChanges).toBe(true);
+      });
     });
 
-    it("should return hasChanges=false when there are no changes", async () => {
-      const sourceData = { key1: "value1" };
-      const targetData = { key1: "value1" };
+    describe("hasChanges", () => {
+      it("should return hasChanges=false when there are no changes", async () => {
+        const sourceData = { key1: "value1" };
+        const targetData = { key1: "value1" };
+        const checksums = { key1: "mocked-hash-value1" };
 
-      // Mock to simulate matching checksums
-      (MD5 as any).mockImplementation((value) => "matching-hash");
-      const checksums = { key1: "matching-hash" };
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
 
-      const result = await mockProcessor.calculateDelta({
-        sourceData,
-        targetData,
-        checksums,
+        expect(result.added).toEqual([]);
+        expect(result.removed).toEqual([]);
+        expect(result.updated).toEqual([]);
+        expect(result.renamed).toEqual([]);
+        expect(result.hasChanges).toBe(false);
       });
 
-      expect(result.added).toEqual([]);
-      expect(result.removed).toEqual([]);
-      expect(result.updated).toEqual([]);
-      expect(result.renamed).toEqual([]);
-      expect(result.hasChanges).toBe(false);
+      it("should return hasChanges=false when there are no changes based on checksums", async () => {
+        const sourceData = { key1: "value1", key2: "value2", key3: "value3" };
+        const targetData = { key1: "value1", key2: "value3" };
+        const checksums = {
+          key2: "mocked-hash-value2",
+          key3: "mocked-hash-value3",
+        };
+
+        const result = await processor.calculateDelta({
+          sourceData,
+          targetData,
+          checksums,
+        });
+
+        expect(result.added).toEqual([]);
+        expect(result.removed).toEqual([]);
+        expect(result.updated).toEqual([]);
+        expect(result.renamed).toEqual([]);
+        expect(result.hasChanges).toBe(false);
+      });
     });
   });
 
@@ -143,7 +229,7 @@ describe("createDeltaProcessor", () => {
     it("should return default lock data when no file exists", async () => {
       (tryReadFile as any).mockReturnValue(null);
 
-      const result = await mockProcessor.loadLock();
+      const result = await processor.loadLock();
 
       expect(result).toEqual({
         version: 1,
@@ -155,7 +241,7 @@ describe("createDeltaProcessor", () => {
       const mockYaml = "version: 1\nchecksums:\n  fileId:\n    key1: checksum1";
       (tryReadFile as any).mockReturnValue(mockYaml);
 
-      const result = await mockProcessor.loadLock();
+      const result = await processor.loadLock();
 
       expect(result).toEqual({
         version: 1,
@@ -179,7 +265,7 @@ describe("createDeltaProcessor", () => {
         },
       };
 
-      await mockProcessor.saveLock(lockData);
+      await processor.saveLock(lockData);
 
       expect(writeFile).toHaveBeenCalledWith(
         "/mocked/path/i18n.lock",
@@ -195,22 +281,19 @@ describe("createDeltaProcessor", () => {
 
   describe("loadChecksums and saveChecksums", () => {
     it("should load checksums for the specific file key", async () => {
-      // Reset MD5 implementation for fileKey hash
-      (MD5 as any).mockImplementation((value) => "mocked-hash");
-
       // Mock the loadLock to return specific data
       const mockLockData = {
         version: 1 as const,
         checksums: {
-          "mocked-hash": {
+          [`mocked-hash-${mockFileKey}`]: {
             key1: "checksum1",
           },
         },
       };
 
-      vi.spyOn(mockProcessor, "loadLock").mockResolvedValue(mockLockData);
+      vi.spyOn(processor, "loadLock").mockResolvedValue(mockLockData);
 
-      const result = await mockProcessor.loadChecksums();
+      const result = await processor.loadChecksums();
 
       expect(result).toEqual({
         key1: "checksum1",
@@ -220,25 +303,22 @@ describe("createDeltaProcessor", () => {
     it("should save checksums for the specific file key", async () => {
       const checksums = { key1: "checksum1" };
 
-      // Reset MD5 implementation for fileKey hash
-      (MD5 as any).mockImplementation((value) => "mocked-hash");
-
       // Mock loadLock and saveLock
       const mockLockData = {
         version: 1 as const,
         checksums: {},
       };
-      vi.spyOn(mockProcessor, "loadLock").mockResolvedValue(mockLockData);
+      vi.spyOn(processor, "loadLock").mockResolvedValue(mockLockData);
       const saveLockSpy = vi
-        .spyOn(mockProcessor, "saveLock")
+        .spyOn(processor, "saveLock")
         .mockResolvedValue(void 0);
 
-      await mockProcessor.saveChecksums(checksums);
+      await processor.saveChecksums(checksums);
 
       expect(saveLockSpy).toHaveBeenCalledWith({
         version: 1,
         checksums: {
-          "mocked-hash": checksums,
+          [`mocked-hash-${mockFileKey}`]: checksums,
         },
       });
     });
@@ -251,15 +331,11 @@ describe("createDeltaProcessor", () => {
         key2: "value2",
       };
 
-      // Setup counter for mock
-      let counter = 0;
-      (MD5 as any).mockImplementation((value) => `mock-hash-${++counter}`);
-
-      const result = await mockProcessor.createChecksums(sourceData);
+      const result = await processor.createChecksums(sourceData);
 
       expect(result).toEqual({
-        key1: "mock-hash-1",
-        key2: "mock-hash-2",
+        key1: "mocked-hash-value1",
+        key2: "mocked-hash-value2",
       });
     });
   });

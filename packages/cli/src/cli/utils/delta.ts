@@ -56,7 +56,7 @@ export function createDeltaProcessor(fileKey: string) {
         Object.keys(params.targetData),
         Object.keys(params.sourceData),
       );
-      const updated = Object.keys(params.sourceData).filter(
+      let updated = Object.keys(params.sourceData).filter(
         (key) =>
           md5(params.sourceData[key]) !== params.checksums[key] &&
           params.checksums[key],
@@ -72,10 +72,24 @@ export function createDeltaProcessor(fileKey: string) {
           }
         }
       }
+      for (const addedKey of added) {
+        const addedHash = md5(params.sourceData[addedKey]);
+        for (const updatedKey of updated) {
+          if (params.checksums[updatedKey] === addedHash) {
+            renamed.push([updatedKey, addedKey]);
+            // added.push(updatedKey);
+            break;
+          }
+        }
+      }
+
       added = added.filter(
         (key) => !renamed.some(([oldKey, newKey]) => newKey === key),
       );
       removed = removed.filter(
+        (key) => !renamed.some(([oldKey, newKey]) => oldKey === key),
+      );
+      updated = updated.filter(
         (key) => !renamed.some(([oldKey, newKey]) => oldKey === key),
       );
 
@@ -86,13 +100,15 @@ export function createDeltaProcessor(fileKey: string) {
         renamed.length > 0,
       ].some((v) => v);
 
-      return {
+      const result = {
         added,
         removed,
         updated,
         renamed,
         hasChanges,
       };
+      console.log(result);
+      return result;
     },
     async loadLock() {
       const lockfileContent = tryReadFile(lockfilePath, null);
