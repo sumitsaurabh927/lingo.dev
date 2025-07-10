@@ -592,40 +592,44 @@ describe("bucket loaders", () => {
 
       const input = {
         title: {
-          en: "Hello World"
+          en: "Hello World",
         },
         navigation: {
           header: {
-            en: "Navigation Header"
-          }
-        }
+            en: "Navigation Header",
+          },
+        },
       };
       const payload = {
         "title%2Fen": "Hola Mundo",
-        "navigation%2Fheader%2Fen": "Encabezado de Navegación"
+        "navigation%2Fheader%2Fen": "Encabezado de Navegación",
       };
       const expectedOutput = JSON.stringify(
         {
           title: {
             en: "Hello World",
-            es: "Hola Mundo"
+            es: "Hola Mundo",
           },
           navigation: {
             header: {
               en: "Navigation Header",
-              es: "Encabezado de Navegación"
-            }
-          }
+              es: "Encabezado de Navegación",
+            },
+          },
         },
         null,
-        2
+        2,
       );
 
       mockFileOperations(JSON.stringify(input));
 
-      const jsonKeysLoader = createBucketLoader("json-keys", "i18n/[locale].json", {
-        defaultLocale: "en",
-      });
+      const jsonKeysLoader = createBucketLoader(
+        "json-keys",
+        "i18n/[locale].json",
+        {
+          defaultLocale: "en",
+        },
+      );
       jsonKeysLoader.setDefaultLocale("en");
       const data = await jsonKeysLoader.pull("en");
 
@@ -633,12 +637,12 @@ describe("bucket loaders", () => {
 
       expect(data).toEqual({
         "title%2Fen": "Hello World",
-        "navigation%2Fheader%2Fen": "Navigation Header"
+        "navigation%2Fheader%2Fen": "Navigation Header",
       });
       expect(fs.writeFile).toHaveBeenCalledWith(
         "i18n/es.json",
         expectedOutput,
-        { encoding: "utf-8", flag: "w" }
+        { encoding: "utf-8", flag: "w" },
       );
     });
   });

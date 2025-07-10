@@ -9,20 +9,20 @@ describe("createJsonKeysLoader", () => {
     const input = {
       title: {
         en: "Hello World",
-        fr: "Bonjour le monde"
+        fr: "Bonjour le monde",
       },
       description: {
         en: "This is a description",
-        de: "Das ist eine Beschreibung"
+        de: "Das ist eine Beschreibung",
       },
-      other: "not a locale object"
+      other: "not a locale object",
     };
 
     const result = await loader.pull("en", input);
 
     expect(result).toEqual({
       "title/en": "Hello World",
-      "description/en": "This is a description"
+      "description/en": "This is a description",
     });
   });
 
@@ -34,17 +34,17 @@ describe("createJsonKeysLoader", () => {
       navigation: {
         header: {
           en: "Navigation Header",
-          es: "Encabezado de Navegación"
+          es: "Encabezado de Navegación",
         },
         footer: {
-          en: "Footer Text"
-        }
+          en: "Footer Text",
+        },
       },
       content: {
         main: {
-          en: "Main Content"
-        }
-      }
+          en: "Main Content",
+        },
+      },
     };
 
     const result = await loader.pull("en", input);
@@ -52,7 +52,7 @@ describe("createJsonKeysLoader", () => {
     expect(result).toEqual({
       "navigation/header/en": "Navigation Header",
       "navigation/footer/en": "Footer Text",
-      "content/main/en": "Main Content"
+      "content/main/en": "Main Content",
     });
   });
 
@@ -76,17 +76,17 @@ describe("createJsonKeysLoader", () => {
         en: "Hello World",
         fr: 123,
         de: null,
-        es: undefined
+        es: undefined,
       },
       config: {
-        en: { nested: "object" }
-      }
+        en: { nested: "object" },
+      },
     };
 
     const result = await loader.pull("en", input);
 
     expect(result).toEqual({
-      "title/en": "Hello World"
+      "title/en": "Hello World",
     });
   });
 
@@ -97,11 +97,11 @@ describe("createJsonKeysLoader", () => {
     const input = {
       settings: {
         theme: "dark",
-        language: "english"
+        language: "english",
       },
       metadata: {
-        version: "1.0.0"
-      }
+        version: "1.0.0",
+      },
     };
 
     const result = await loader.pull("en", input);
@@ -115,18 +115,18 @@ describe("createJsonKeysLoader", () => {
 
     const originalInput = {
       title: {
-        en: "Hello World"
+        en: "Hello World",
       },
       description: {
-        en: "This is a description"
-      }
+        en: "This is a description",
+      },
     };
 
     await loader.pull("en", originalInput);
 
     const translations = {
       "title/en": "Hola Mundo",
-      "description/en": "Esta es una descripción"
+      "description/en": "Esta es una descripción",
     };
 
     const result = await loader.push("es", translations);
@@ -134,12 +134,12 @@ describe("createJsonKeysLoader", () => {
     expect(result).toEqual({
       title: {
         en: "Hello World",
-        es: "Hola Mundo"
+        es: "Hola Mundo",
       },
       description: {
         en: "This is a description",
-        es: "Esta es una descripción"
-      }
+        es: "Esta es una descripción",
+      },
     });
   });
 
@@ -150,17 +150,17 @@ describe("createJsonKeysLoader", () => {
     const originalInput = {
       navigation: {
         header: {
-          en: "Navigation Header"
+          en: "Navigation Header",
         },
         footer: {
-          en: "Footer Text"
-        }
+          en: "Footer Text",
+        },
       },
       content: {
         main: {
-          en: "Main Content"
-        }
-      }
+          en: "Main Content",
+        },
+      },
     };
 
     await loader.pull("en", originalInput);
@@ -168,7 +168,7 @@ describe("createJsonKeysLoader", () => {
     const translations = {
       "navigation/header/en": "Encabezado de Navegación",
       "navigation/footer/en": "Texto del Pie",
-      "content/main/en": "Contenido Principal"
+      "content/main/en": "Contenido Principal",
     };
 
     const result = await loader.push("es", translations);
@@ -177,19 +177,19 @@ describe("createJsonKeysLoader", () => {
       navigation: {
         header: {
           en: "Navigation Header",
-          es: "Encabezado de Navegación"
+          es: "Encabezado de Navegación",
         },
         footer: {
           en: "Footer Text",
-          es: "Texto del Pie"
-        }
+          es: "Texto del Pie",
+        },
       },
       content: {
         main: {
           en: "Main Content",
-          es: "Contenido Principal"
-        }
-      }
+          es: "Contenido Principal",
+        },
+      },
     });
   });
 
@@ -200,19 +200,19 @@ describe("createJsonKeysLoader", () => {
     const originalInput = {
       title: {
         en: "Hello World",
-        fr: "Bonjour le monde"
+        fr: "Bonjour le monde",
       },
       description: {
         en: "This is a description",
-        de: "Das ist eine Beschreibung"
-      }
+        de: "Das ist eine Beschreibung",
+      },
     };
 
     await loader.pull("en", originalInput);
 
     const translations = {
       "title/en": "Hola Mundo",
-      "description/en": "Esta es una descripción"
+      "description/en": "Esta es una descripción",
     };
 
     const result = await loader.push("es", translations);
@@ -221,13 +221,13 @@ describe("createJsonKeysLoader", () => {
       title: {
         en: "Hello World",
         fr: "Bonjour le monde",
-        es: "Hola Mundo"
+        es: "Hola Mundo",
       },
       description: {
         en: "This is a description",
         de: "Das ist eine Beschreibung",
-        es: "Esta es una descripción"
-      }
+        es: "Esta es una descripción",
+      },
     });
   });
 
@@ -237,20 +237,20 @@ describe("createJsonKeysLoader", () => {
 
     const originalInput = {
       title: {
-        en: "Hello World"
+        en: "Hello World",
       },
       description: {
-        en: "This is a description"
+        en: "This is a description",
       },
       footer: {
-        en: "Footer text"
-      }
+        en: "Footer text",
+      },
     };
 
     await loader.pull("en", originalInput);
 
     const translations = {
-      "title/en": "Hola Mundo"
+      "title/en": "Hola Mundo",
     };
 
     const result = await loader.push("es", translations);
@@ -258,14 +258,14 @@ describe("createJsonKeysLoader", () => {
     expect(result).toEqual({
       title: {
         en: "Hello World",
-        es: "Hola Mundo"
+        es: "Hola Mundo",
       },
       description: {
-        en: "This is a description"
+        en: "This is a description",
       },
       footer: {
-        en: "Footer text"
-      }
+        en: "Footer text",
+      },
     });
   });
 
@@ -275,8 +275,8 @@ describe("createJsonKeysLoader", () => {
 
     const originalInput = {
       title: {
-        en: "Hello World"
-      }
+        en: "Hello World",
+      },
     };
 
     await loader.pull("en", originalInput);
@@ -287,8 +287,8 @@ describe("createJsonKeysLoader", () => {
 
     expect(result).toEqual({
       title: {
-        en: "Hello World"
-      }
+        en: "Hello World",
+      },
     });
   });
 
@@ -299,15 +299,15 @@ describe("createJsonKeysLoader", () => {
     await loader.pull("en", {});
 
     const translations = {
-      "title/en": "Hola Mundo"
+      "title/en": "Hola Mundo",
     };
 
     const result = await loader.push("es", translations);
 
     expect(result).toEqual({
       title: {
-        es: "Hola Mundo"
-      }
+        es: "Hola Mundo",
+      },
     });
   });
 });
