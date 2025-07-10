@@ -42,6 +42,7 @@ import createIgnoredKeysLoader from "./ignored-keys";
 import createEjsLoader from "./ejs";
 import createEnsureKeyOrderLoader from "./ensure-key-order";
 import createTxtLoader from "./txt";
+import createJsonKeysLoader from "./json-keys";
 
 type BucketLoaderOptions = {
   returnUnlocalizedKeys?: boolean;
@@ -98,6 +99,19 @@ export default function createBucketLoader(
         createTextFileLoader(bucketPathPattern),
         createPrettierLoader({ parser: "json", bucketPathPattern }),
         createJsonLoader(),
+        createEnsureKeyOrderLoader(),
+        createFlatLoader(),
+        createInjectLocaleLoader(options.injectLocale),
+        createLockedKeysLoader(lockedKeys || []),
+        createSyncLoader(),
+        createUnlocalizableLoader(options.returnUnlocalizedKeys),
+      );
+    case "json-keys":
+      return composeLoaders(
+        createTextFileLoader(bucketPathPattern),
+        createPrettierLoader({ parser: "json", bucketPathPattern }),
+        createJsonLoader(),
+        createJsonKeysLoader(),
         createEnsureKeyOrderLoader(),
         createFlatLoader(),
         createInjectLocaleLoader(options.injectLocale),
