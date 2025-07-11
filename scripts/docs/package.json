@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "generate-cli-docs": "tsx ./src/generate-cli-docs.ts",
-    "generate-config-docs": "tsx ./src/generate-config-docs.ts"
+    "generate-config-docs": "tsx ./src/generate-config-docs.ts",
+    "test": "vitest"
   },
   "devDependencies": {
     "@lingo.dev/_spec": "workspace:*",
@@ -14,7 +15,8 @@
     "commander": "^12.0.0",
     "remark-stringify": "^11.0.0",
     "tsx": "^4.7.1",
-    "unified": "^11.0.4"
+    "unified": "^11.0.4",
+    "vitest": "^2.1.8"
   },
   "dependencies": {
     "zod-to-json-schema": "^3.24.5",
