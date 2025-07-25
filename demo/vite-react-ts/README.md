@@ -19,7 +19,7 @@ To run this example:
 2. Navigate into this example's directory:
 
    ```bash
-   cd demo/adonisjs
+   cd demo/vite-react-ts
    ```
 
 3. Install the dependencies:
@@ -40,7 +40,7 @@ To run this example:
 
 These are the files that were changed to get **Lingo.dev Compiler** up and running:
 
-- [src/main.tsx](./src/App.tsx)
+- [src/App.tsx](./src/App.tsx)
 - [src/main.tsx](./src/main.tsx)
 - [vite.config.ts](./vite.config.ts)
 
