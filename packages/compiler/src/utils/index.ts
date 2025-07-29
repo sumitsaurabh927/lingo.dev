@@ -70,9 +70,16 @@ function findExistingImport(
         return;
       }
 
+      // Skip type-only imports as they can't be used at runtime
+      if (path.node.importKind === "type") {
+        return;
+      }
+
       for (const specifier of path.node.specifiers) {
         if (
           t.isImportSpecifier(specifier) &&
+          // Skip type-only specifiers as they can't be used at runtime
+          specifier.importKind !== "type" &&
           ((t.isIdentifier(specifier.imported) &&
             specifier.imported.name === exportedName) ||
             (specifier.importKind === "value" &&
@@ -80,6 +87,24 @@ function findExistingImport(
               specifier.local.name === exportedName))
         ) {
           result = specifier.local.name;
+          path.stop();
+          return;
+        }
+
+        // Handle default imports (import React from "react")
+        if (t.isImportDefaultSpecifier(specifier)) {
+          // For default imports, we can access the exported name via the default import
+          // e.g., React.Fragment when we have "import React from 'react'"
+          result = `${specifier.local.name}.${exportedName}`;
+          path.stop();
+          return;
+        }
+
+        // Handle namespace imports (import * as React from "react")
+        if (t.isImportNamespaceSpecifier(specifier)) {
+          // For namespace imports, we can access the exported name via the namespace
+          // e.g., React.Fragment when we have "import * as React from 'react'"
+          result = `${specifier.local.name}.${exportedName}`;
           path.stop();
           return;
         }
@@ -131,13 +156,14 @@ function createImportDeclaration(
         t.identifier(exportedName),
       );
 
-      // Check if we already have an import from this module
+      // Check if we already have a non-type import from this module
       const existingImport = path
         .get("body")
         .find(
           (nodePath) =>
             t.isImportDeclaration(nodePath.node) &&
-            moduleName.includes(nodePath.node.source.value),
+            moduleName.includes(nodePath.node.source.value) &&
+            nodePath.node.importKind !== "type",
         );
 
       if (existingImport && t.isImportDeclaration(existingImport.node)) {

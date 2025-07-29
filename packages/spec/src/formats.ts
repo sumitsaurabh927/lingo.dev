@@ -7,6 +7,8 @@ export const bucketTypes = [
   "flutter",
   "html",
   "json",
+  "json5",
+  "jsonc",
   "markdown",
   "mdx",
   "xcode-strings",
@@ -27,6 +29,7 @@ export const bucketTypes = [
   "vue-json",
   "typescript",
   "txt",
+  "json-dictionary",
 ] as const;
 
 export const bucketTypeSchema = Z.enum(bucketTypes);
