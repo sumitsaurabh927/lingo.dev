@@ -1,72 +1,46 @@
-# Welcome to TanStack.com!
+# Lingo.dev Compiler with TanStack Start
 
-This site is built with TanStack Router!
+## Introduction
 
-- [TanStack Router Docs](https://tanstack.com/router)
+This example demonstrates how to set up [Lingo.dev Compiler](https://lingo.dev/en/compiler/) with [TanStack Start](https://tanstack.com/start/latest).
 
-It's deployed automagically with Netlify!
+## Running this example
 
-- [Netlify](https://netlify.com/)
+To run this example:
 
-## Development
+1. Set the `LINGODOTDEV_API_KEY` environment variable:
 
-From your terminal:
+   ```bash
+   export LINGODOTDEV_API_KEY="<your_api_key>"
+   ```
 
-```sh
-pnpm install
-pnpm dev
-```
+   To get an API key, sign up for a free account at [lingo.dev](https://lingo.dev).
 
-This starts your app in development mode, rebuilding assets on file changes.
+2. Navigate into this example's directory:
 
-## Editing and previewing the docs of TanStack projects locally
+   ```bash
+   cd demo/tanstack-start
+   ```
 
-The documentations for all TanStack projects except for `React Charts` are hosted on [https://tanstack.com](https://tanstack.com), powered by this TanStack Router app.
-In production, the markdown doc pages are fetched from the GitHub repos of the projects, but in development they are read from the local file system.
+3. Install the dependencies:
 
-Follow these steps if you want to edit the doc pages of a project (in these steps we'll assume it's [`TanStack/form`](https://github.com/tanstack/form)) and preview them locally :
+   ```bash
+   pnpm install
+   ```
 
-1. Create a new directory called `tanstack`.
+4. Run the development server:
 
-```sh
-mkdir tanstack
-```
+   ```bash
+   pnpm run dev
+   ```
 
-2. Enter the directory and clone this repo and the repo of the project there.
+5. Navigate to <http://localhost:3000>.
 
-```sh
-cd tanstack
-git clone git@github.com:TanStack/tanstack.com.git
-git clone git@github.com:TanStack/form.git
-```
+## Changed files
 
-> [!NOTE]
-> Your `tanstack` directory should look like this:
->
-> ```
-> tanstack/
->    |
->    +-- form/
->    |
->    +-- tanstack.com/
-> ```
+These are the files that were changed to get **Lingo.dev Compiler** up and running:
 
-> [!WARNING]
-> Make sure the name of the directory in your local file system matches the name of the project's repo. For example, `tanstack/form` must be cloned into `form` (this is the default) instead of `some-other-name`, because that way, the doc pages won't be found.
+- [src/routes/__root.tsx](./src/routes/__root.tsx)
+- [vite.config.ts](./vite.config.ts)
 
-3. Enter the `tanstack/tanstack.com` directory, install the dependencies and run the app in dev mode:
-
-```sh
-cd tanstack.com
-pnpm i
-# The app will run on https://localhost:3000 by default
-pnpm dev
-```
-
-4. Now you can visit http://localhost:3000/form/latest/docs/overview in the browser and see the changes you make in `tanstack/form/docs`.
-
-> [!NOTE]
-> The updated pages need to be manually reloaded in the browser.
-
-> [!WARNING]
-> You will need to update the `docs/config.json` file (in the project's repo) if you add a new doc page!
+You can use these files as a reference when setting up the compiler in your own project.
