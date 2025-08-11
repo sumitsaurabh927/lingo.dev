@@ -27,6 +27,12 @@ const PROVIDER_NAME_MAP: Record<string, string> = {
 };
 const SUPPORTED = new Set(Object.keys(providerDetails));
 
+const EXCLUDED_MODEL_IDS: Set<string> = new Set([
+  "llama-guard-3-8b",
+  "meta-llama/llama-guard-4-12b",
+  "deepseek/deepseek-v3-base:free",
+]);
+
 type ApiResponse = Record<
   string,
   { models: Record<string, { name?: string }>; [k: string]: unknown }
@@ -44,6 +50,7 @@ function groupModelsByProvider(api: ApiResponse): Record<string, Set<string>> {
     const provider = PROVIDER_NAME_MAP[rawProvider] ?? rawProvider;
     if (!SUPPORTED.has(provider)) continue;
     for (const modelKey of Object.keys(info.models)) {
+      if (EXCLUDED_MODEL_IDS.has(modelKey)) continue;
       (grouped[provider] ??= new Set()).add(modelKey);
     }
   }
