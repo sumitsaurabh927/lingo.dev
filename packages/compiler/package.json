@@ -15,7 +15,7 @@
     "build"
   ],
   "scripts": {
-    "generate-types": "tsx scripts/generate-model-types.ts",
+    "generate-model-identifiers": "tsx scripts/generate-model-identifiers.ts",
     "dev": "tsup --watch",
     "build": "pnpm typecheck && tsup",
     "typecheck": "tsc --noEmit",

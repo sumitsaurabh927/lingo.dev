@@ -1,12 +1,13 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "types": ["node"],
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
     "target": "ES2022",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "lib": ["ES2022"],
+    "skipLibCheck": true
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["*.ts"]
 }
