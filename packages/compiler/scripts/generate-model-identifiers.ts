@@ -5,6 +5,15 @@ import { fileURLToPath } from "node:url";
 import prettier from "prettier";
 import { providerDetails } from "../src/lib/lcp/api/provider-details.js";
 
+/**
+ * This script generates the `packages/compiler/src/model-identifiers.ts` file.
+ *
+ * Usage:
+ *
+ * cd packages/compiler
+ * pnpm run generate-model-identifiers
+ */
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
