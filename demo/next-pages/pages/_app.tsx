@@ -18,7 +18,9 @@ const geistMono = Geist_Mono({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <LingoProvider loadDictionary={(locale) => loadDictionary(locale)}>
-      <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <div
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <div className="absolute top-2 right-3">
           <LocaleSwitcher
             locales={["en", "es", "zh", "ja", "fr", "de", "ru", "ar", "ko"]}

@@ -164,7 +164,7 @@ function configureNextjsBundler(
   turbopackConfig: {
     enabled?: boolean | "auto";
     useLegacyTurbo?: boolean;
-  }
+  },
 ): void {
   let turbopackEnabled: boolean;
   if (turbopackConfig.enabled === "auto") {
