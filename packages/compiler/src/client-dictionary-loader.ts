@@ -7,10 +7,18 @@ import { getDictionaryPath } from "./_utils";
 import { createLocaleImportMap } from "./utils/create-locale-import-map";
 
 export const clientDictionaryLoaderMutation = createCodeMutation((payload) => {
+  if (payload.params.rsc === true) {
+    return payload;
+  }
+
   const invokations = findInvokations(payload.ast, {
     moduleName: ModuleId.ReactClient,
     functionName: "loadDictionary",
   });
+
+  if (invokations.length === 0) {
+    return payload;
+  }
 
   const allLocales = Array.from(
     new Set([payload.params.sourceLocale, ...payload.params.targetLocales]),
