@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { LocaleSwitcher } from "lingo.dev/react/client";
-import { LingoProvider, loadDictionary } from "lingo.dev/react";
+import { LingoProviderWrapper, loadDictionary } from "lingo.dev/react/client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <LingoProvider loadDictionary={(locale) => loadDictionary(locale)}>
+    <LingoProviderWrapper loadDictionary={(locale) => loadDictionary(locale)}>
       <div
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -28,6 +28,6 @@ export default function App({ Component, pageProps }: AppProps) {
         </div>
         <Component {...pageProps} />
       </div>
-    </LingoProvider>
+    </LingoProviderWrapper>
   );
 }
