@@ -1,7 +1,6 @@
-"use server";
 "use i18n";
 
-export async function HeroSubtitle() {
+export function HeroSubtitle() {
   return (
     <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-xl mx-auto leading-relaxed">
       Localize your React app in every language in minutes.
