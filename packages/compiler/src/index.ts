@@ -323,7 +323,7 @@ export default {
         defaultParams,
         {
           rsc: false,
-          sourceRoot: "pages",
+          sourceRoot: "./",
           turbopack: {
             enabled: "auto",
             useLegacyTurbo: false,
