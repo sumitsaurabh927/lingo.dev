@@ -30,7 +30,6 @@ export const clientDictionaryLoaderMutation = createCodeMutation((payload) => {
       exportedName: "loadDictionary_internal",
     });
 
-    // Replace the function identifier with internal version
     if (t.isIdentifier(invokation.callee)) {
       invokation.callee.name = internalDictionaryLoader.importedName;
     }
@@ -41,10 +40,8 @@ export const clientDictionaryLoaderMutation = createCodeMutation((payload) => {
       relativeFilePath: payload.relativeFilePath,
     });
 
-    // Create locale import map object
     const localeImportMap = createLocaleImportMap(allLocales, dictionaryPath);
 
-    // Add the locale import map as the second argument
     invokation.arguments.push(localeImportMap);
   }
 
