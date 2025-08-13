@@ -274,6 +274,124 @@ export default {
       return nextConfig;
     },
   /**
+   * Initializes Lingo.dev Compiler for Next.js (Pages Router).
+   *
+   * @param compilerParams - The compiler parameters.
+   *
+   * @returns The Next.js configuration.
+   *
+   * @example Configuration for Next.js Pages Router
+   * ```ts
+   * import lingoCompiler from "lingo.dev/compiler";
+   * import type { NextConfig } from "next";
+   *
+   * const nextConfig: NextConfig = {
+   *   /* config options here *\/
+   * };
+   *
+   * export default lingoCompiler.pages({
+   *   sourceRoot: "pages",
+   *   models: "lingo.dev",
+   * })(nextConfig);
+   * ```
+   */
+  pages:
+    (
+      compilerParams?: Partial<typeof defaultParams> & {
+        turbopack?: {
+          enabled?: boolean | "auto";
+          useLegacyTurbo?: boolean;
+        };
+      },
+    ) =>
+    (nextConfig: any = {}): NextConfig => {
+      const mergedParams = _.merge(
+        {},
+        defaultParams,
+        {
+          rsc: false,
+          sourceRoot: "pages",
+          turbopack: {
+            enabled: "auto",
+            useLegacyTurbo: false,
+          },
+        },
+        compilerParams,
+      );
+
+      const isDev = process.env.NODE_ENV !== "production";
+      sendBuildEvent("Next.js Pages Router", mergedParams, isDev);
+
+      let turbopackEnabled: boolean;
+      if (mergedParams.turbopack?.enabled === "auto") {
+        turbopackEnabled =
+          process.env.TURBOPACK === "1" || process.env.TURBOPACK === "true";
+      } else {
+        turbopackEnabled = mergedParams.turbopack?.enabled === true;
+      }
+
+      const supportLegacyTurbo: boolean =
+        mergedParams.turbopack?.useLegacyTurbo === true;
+
+      const hasWebpackConfig = typeof nextConfig.webpack === "function";
+      const hasTurbopackConfig = typeof nextConfig.turbopack === "function";
+      if (hasWebpackConfig && turbopackEnabled) {
+        console.warn(
+          "⚠️  Turbopack is enabled in the Lingo.dev compiler, but you have webpack config. Lingo.dev will still apply turbopack configuration.",
+        );
+      }
+      if (hasTurbopackConfig && !turbopackEnabled) {
+        console.warn(
+          "⚠️  Turbopack is disabled in the Lingo.dev compiler, but you have turbopack config. Lingo.dev will not apply turbopack configuration.",
+        );
+      }
+
+      // Webpack
+      const originalWebpack = nextConfig.webpack;
+      nextConfig.webpack = (config: any, options: any) => {
+        if (!turbopackEnabled) {
+          console.log("Applying Lingo.dev webpack configuration...");
+          config.plugins.unshift(unplugin.webpack(mergedParams));
+        }
+
+        if (typeof originalWebpack === "function") {
+          return originalWebpack(config, options);
+        }
+        return config;
+      };
+
+      // Turbopack
+      if (turbopackEnabled) {
+        console.log("Applying Lingo.dev Turbopack configuration...");
+
+        // Check if the legacy turbo flag is set
+        let turbopackConfigPath = (nextConfig.turbopack ??= {});
+        if (supportLegacyTurbo) {
+          turbopackConfigPath = (nextConfig.experimental ??= {}).turbo ??= {};
+        }
+
+        turbopackConfigPath.rules ??= {};
+        const rules = turbopackConfigPath.rules;
+
+        // Regex for all relevant files for Lingo.dev
+        const lingoGlob = `**/*.{ts,tsx,js,jsx}`;
+
+        // The .cjs extension is required for Next.js v14
+        const lingoLoaderPath = require.resolve("./lingo-turbopack-loader.cjs");
+
+        rules[lingoGlob] = {
+          loaders: [
+            {
+              loader: lingoLoaderPath,
+              options: mergedParams,
+            },
+          ],
+        };
+      }
+
+      return nextConfig;
+    },
+  /**
    * Initializes Lingo.dev Compiler for Vite.
    *
    * @param compilerParams - The compiler parameters.
