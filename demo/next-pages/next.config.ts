@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
   /* config options here */
 };
 
-export default lingoCompiler.pages({
+export default lingoCompiler.next({
+  router: "pages",
   sourceLocale: "en",
   targetLocales: ["es", "ja", "fr", "ru", "de", "zh", "ar", "ko"],
   models: "lingo.dev",

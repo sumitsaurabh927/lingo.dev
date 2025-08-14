@@ -255,6 +255,21 @@ export default {
    *   models: "lingo.dev",
    * })(nextConfig);
    * ```
+   *
+   * @example Configuration for Next.js Pages Router
+   * ```ts
+   * import lingoCompiler from "lingo.dev/compiler";
+   * import type { NextConfig } from "next";
+   *
+   * const nextConfig: NextConfig = {
+   *   /* config options here *\/
+   * };
+   *
+   * export default lingoCompiler.next({
+   *   router=pages,
+   *   models: "lingo.dev",
+   * })(nextConfig);
+   * ```
    */
   next:
     (
@@ -277,6 +292,12 @@ export default {
           },
         },
         compilerParams,
+        compilerParams?.router === "pages"
+          ? {
+              rsc: false,
+              sourceRoot: compilerParams.sourceRoot || "./",
+            }
+          : {},
       );
 
       const isDev = process.env.NODE_ENV !== "production";
@@ -286,59 +307,7 @@ export default {
 
       return nextConfig;
     },
-  /**
-   * Initializes Lingo.dev Compiler for Next.js (Pages Router).
-   *
-   * @param compilerParams - The compiler parameters.
-   *
-   * @returns The Next.js configuration.
-   *
-   * @example Configuration for Next.js Pages Router
-   * ```ts
-   * import lingoCompiler from "lingo.dev/compiler";
-   * import type { NextConfig } from "next";
-   *
-   * const nextConfig: NextConfig = {
-   *   /* config options here *\/
-   * };
-   *
-   * export default lingoCompiler.pages({
-   *   sourceRoot: "pages",
-   *   models: "lingo.dev",
-   * })(nextConfig);
-   * ```
-   */
-  pages:
-    (
-      compilerParams?: Partial<typeof defaultParams> & {
-        turbopack?: {
-          enabled?: boolean | "auto";
-          useLegacyTurbo?: boolean;
-        };
-      },
-    ) =>
-    (nextConfig: any = {}): NextConfig => {
-      const mergedParams = _.merge(
-        {},
-        defaultParams,
-        {
-          rsc: false,
-          sourceRoot: "./",
-          turbopack: {
-            enabled: "auto",
-            useLegacyTurbo: false,
-          },
-        },
-        compilerParams,
-      );
 
-      const isDev = process.env.NODE_ENV !== "production";
-      sendBuildEvent("Next.js Pages Router", mergedParams, isDev);
-
-      configureNextjsBundler(nextConfig, mergedParams, mergedParams.turbopack);
-
-      return nextConfig;
-    },
   /**
    * Initializes Lingo.dev Compiler for Vite.
    *

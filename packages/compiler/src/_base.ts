@@ -89,6 +89,14 @@ export type CompilerParams = {
    * @default null
    */
   prompt?: string | null;
+  /**
+   * The router mode to use for routing features.
+   *
+   * If set to `"app"`, enables app router features.
+   *
+   * @default "app"
+   */
+  router?: string;
 };
 
 /**
@@ -195,6 +203,7 @@ export function composeMutations(...mutations: CodeMutation[]) {
 }
 
 export const defaultParams: CompilerParams = {
+  router: "app",
   sourceRoot: "src",
   lingoDir: "lingo",
   sourceLocale: "en",
