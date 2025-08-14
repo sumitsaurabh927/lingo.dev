@@ -1,0 +1,48 @@
+{
+  "files": {
+    "components/hero-actions.tsx": {
+      "scopes": {
+        "0/declaration/body/0/argument/1": {
+          "type": "element",
+          "hash": "5a200c3671a19619019dc54fe6ee7bc9",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Docs"
+        },
+        "0/declaration/body/0/argument/1-title": {
+          "type": "attribute",
+          "hash": "eff5f7b682b37d139b44e588722969af",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Docs link"
+        }
+      }
+    },
+    "components/hero-subtitle.tsx": {
+      "scopes": {
+        "0/declaration/body/0/argument": {
+          "type": "element",
+          "hash": "42a1c5e167c08050acee36365e4698e8",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "This is a localized paragraph."
+        }
+      }
+    },
+    "components/hero-title.tsx": {
+      "scopes": {
+        "0/declaration/body/0/argument": {
+          "type": "element",
+          "hash": "c0a6ecdec1e8d3283b164b08d95f29fa",
+          "context": "",
+          "skip": false,
+          "overrides": {},
+          "content": "Hello World"
+        }
+      }
+    }
+  }
+}
