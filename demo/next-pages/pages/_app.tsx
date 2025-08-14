@@ -1,3 +1,5 @@
+"use i18n";
+
 import type { AppProps } from "next/app";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
