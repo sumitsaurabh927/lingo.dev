@@ -92,11 +92,12 @@ export type CompilerParams = {
   /**
    * The router mode to use for routing features.
    *
-   * If set to `"app"`, enables app router features.
+   * - `"app"`: Next.js App Router (RSC enabled, sourceRoot defaults to "src")
+   * - `"pages"`: Next.js Pages Router (RSC disabled, sourceRoot defaults to "./")
    *
    * @default "app"
    */
-  router?: string;
+  router?: "app" | "pages";
 };
 
 /**

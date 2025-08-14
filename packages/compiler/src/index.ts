@@ -266,7 +266,7 @@ export default {
    * };
    *
    * export default lingoCompiler.next({
-   *   router=pages,
+   *   router: "pages",
    *   models: "lingo.dev",
    * })(nextConfig);
    * ```
@@ -274,6 +274,7 @@ export default {
   next:
     (
       compilerParams?: Partial<typeof defaultParams> & {
+        router?: "app" | "pages";
         turbopack?: {
           enabled?: boolean | "auto";
           useLegacyTurbo?: boolean;
