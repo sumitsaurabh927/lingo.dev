@@ -20,21 +20,21 @@ interface CIOptions {
 
 export default new Command()
   .command("ci")
-  .description("Run Lingo.dev CI/CD action")
+  .description("Automate localization updates in CI/CD pipelines for GitHub, GitLab, and Bitbucket")
   .helpOption("-h, --help", "Show help")
-  .option("--parallel [boolean]", "Run in parallel mode", parseBooleanArg)
-  .option("--api-key <key>", "API key")
+  .option("--parallel [boolean]", "Run localization processing in parallel", parseBooleanArg)
+  .option("--api-key <key>", "Lingo.dev API key for authentication")
   .option(
     "--pull-request [boolean]",
-    "Create a pull request with the changes",
+    "Create or update a pull request with translation changes",
     parseBooleanArg,
   )
-  .option("--commit-message <message>", "Commit message")
-  .option("--pull-request-title <title>", "Pull request title")
-  .option("--working-directory <dir>", "Working directory")
+  .option("--commit-message <message>", "Custom message for translation update commits")
+  .option("--pull-request-title <title>", "Custom title for translation pull requests")
+  .option("--working-directory <dir>", "Directory to run the command in")
   .option(
     "--process-own-commits [boolean]",
-    "Process commits made by this action",
+    "Process commits made by previous Lingo.dev CI runs",
     parseBooleanArg,
   )
   .action(async (options: CIOptions) => {

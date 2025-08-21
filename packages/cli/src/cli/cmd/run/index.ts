@@ -18,56 +18,56 @@ import { determineAuthId } from "./_utils";
 
 export default new Command()
   .command("run")
-  .description("Run Lingo.dev localization engine")
+  .description("Translate content from source locale to target locales")
   .helpOption("-h, --help", "Show help")
   .option(
     "--source-locale <source-locale>",
-    "Locale to use as source locale. Defaults to i18n.json locale.source",
+    "Override source locale from configuration",
   )
   .option(
     "--target-locale <target-locale>",
-    "Locale to use as target locale. Defaults to i18n.json locale.targets",
+    "Override target locales from configuration (can be specified multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--bucket <bucket>",
-    "Bucket to process",
+    "Process specific buckets only (can be specified multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--file <file>",
-    "File to process. Process only files that match this glob pattern in their path. Use quotes around patterns to prevent shell expansion (e.g., --file '**/*.json'). Useful if you have a lot of files and want to focus on a specific one. Specify more files separated by commas or spaces. Accepts glob patterns.",
+    "Process files matching glob pattern (can be specified multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--key <key>",
-    "Key to process. Process only a specific translation key, useful for updating a single entry. Accepts glob patterns.",
+    "Process specific translation keys matching glob pattern (can be specified multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--force",
-    "Ignore lockfile and process all keys, useful for full re-translation",
+    "Process all keys, ignoring change detection",
   )
   .option(
     "--api-key <api-key>",
-    "Explicitly set the API key to use, override the default API key from settings",
+    "Override API key from configuration",
   )
   .option(
     "--debug",
-    "Pause execution at start for debugging purposes, waits for user confirmation before proceeding",
+    "Pause at startup for debugging",
   )
   .option(
     "--concurrency <concurrency>",
-    "Number of concurrent tasks to run",
+    "Maximum number of concurrent translation tasks",
     (val: string) => parseInt(val),
   )
   .option(
     "--watch",
-    "Watch source files for changes and automatically retranslate",
+    "Watch for file changes and retranslate automatically",
   )
   .option(
     "--debounce <milliseconds>",
-    "Debounce delay in milliseconds for watch mode (default: 5000ms)",
+    "Delay before retranslation in watch mode (default: 5000ms)",
     (val: string) => parseInt(val),
   )
   .action(async (args) => {

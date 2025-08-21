@@ -6,9 +6,9 @@ import dedent from "dedent";
 
 export default new Command()
   .name("get")
-  .description("Get the value of a configuration key")
+  .description("Show a configuration value")
   .addHelpText("afterAll", `\nAvailable keys:\n  ${SETTINGS_KEYS.join("\n  ")}`)
-  .argument("<key>", "Configuration key")
+  .argument("<key>", "Configuration key to display (e.g., auth.apiKey, llm.openaiApiKey)")
   .helpOption("-h, --help", "Show help")
   .action(async (key: string) => {
     // Validate that the provided key is one of the recognised configuration keys.

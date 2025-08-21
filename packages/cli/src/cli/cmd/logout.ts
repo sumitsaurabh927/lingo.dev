@@ -10,8 +10,8 @@ import {
 
 export default new Command()
   .command("logout")
-  .description("Log out from Lingo.dev API")
-  .helpOption("-h, --help", "Show help")
+  .description("Clear stored API key and log out locally")
+  .helpOption("-h, --help", "Display help for logout command")
   .action(async () => {
     try {
       await renderClear();

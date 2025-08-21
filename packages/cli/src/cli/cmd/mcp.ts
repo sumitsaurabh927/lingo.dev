@@ -7,9 +7,10 @@ import { getSettings } from "../utils/settings";
 import { createAuthenticator } from "../utils/auth";
 
 export default new Command()
-  .command("mcp")
-  .description("Use Lingo.dev model context provider with your AI agent")
+  .command("mcp [api-key]")
+  .description("Start MCP server providing AI translation tools via stdio transport")
   .helpOption("-h, --help", "Show help")
+  .argument("[api-key]", "Override API key (uses environment/config file if not provided)")
   .action(async (_, program) => {
     const apiKey = program.args[0];
     const settings = getSettings(apiKey);

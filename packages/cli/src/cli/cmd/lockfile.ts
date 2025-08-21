@@ -9,9 +9,9 @@ import { getBuckets } from "../utils/buckets";
 
 export default new Command()
   .command("lockfile")
-  .description("Create a lockfile if it does not exist")
+  .description("Create a lockfile to track changes in source translation files")
   .helpOption("-h, --help", "Show help")
-  .option("-f, --force", "Force create a lockfile")
+  .option("-f, --force", "Overwrite existing lockfile")
   .action(async (options) => {
     const flags = flagsSchema.parse(options);
     const ora = Ora();

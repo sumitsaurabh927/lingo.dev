@@ -7,10 +7,9 @@ import { CLIError } from "../../utils/errors";
 
 export default new Command()
   .command("locale")
-  .description("Print out the list of locales")
+  .description("Show all supported locale codes (includes variants like en-US, en_US, etc.)")
   .helpOption("-h, --help", "Show help")
-  // argument can be equal either "sources" or "targets"
-  .argument("<type>", 'Type of locales to show, either "sources" or "targets"')
+  .argument("<type>", 'Must be "sources" or "targets" (both show the same complete list)')
   .action(async (type) => {
     const ora = Ora();
     try {

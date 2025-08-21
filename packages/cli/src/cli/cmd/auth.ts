@@ -10,11 +10,11 @@ export default new Command()
   // Deprecated options, safe to remove after September 2025
   .option(
     "--login",
-    "Login to your account (deprecated: use 'lingo.dev login' instead)",
+    "(deprecated - use 'lingo login' command)",
   )
   .option(
     "--logout",
-    "Logout from your account (deprecated: use 'lingo.dev logout' instead)",
+    "(deprecated - use 'lingo logout' command)",
   )
   .action(async (options) => {
     try {

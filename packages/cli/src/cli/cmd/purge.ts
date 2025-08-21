@@ -19,30 +19,30 @@ interface PurgeOptions {
 export default new Command()
   .command("purge")
   .description(
-    "Remove translations for given --bucket, --file, --key, --locale",
+    "Remove translation keys from target locales (never removes from source locale)",
   )
   .helpOption("-h, --help", "Show help")
   .option(
     "--bucket <bucket>",
-    "Bucket to process",
+    "Only process specified bucket(s). Can be used multiple times",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--file [files...]",
-    "File(s) to process. Only process files that match the given glob pattern(s).",
+    "Only process files matching these patterns. Can be used multiple times",
   )
   .option(
     "--key <key>",
-    "Key to remove. Remove all translation keys matching the given glob pattern.",
+    "Only remove keys matching this glob pattern. Without this, removes ALL keys",
   )
   .option(
     "--locale <locale>",
-    "Locale to process",
+    "Only process specified locale(s). Can be used multiple times",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--yes-really",
-    "Skip interactive confirmation and delete without asking.",
+    "Skip confirmation prompts (DANGEROUS: will delete without asking)",
   )
   .action(async function (options: PurgeOptions) {
     const ora = Ora();

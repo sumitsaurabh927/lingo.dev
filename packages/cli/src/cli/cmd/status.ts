@@ -31,30 +31,30 @@ interface LanguageStats {
 
 export default new Command()
   .command("status")
-  .description("Show the status of the localization process")
+  .description("Analyze localization progress and show translation status across all languages")
   .helpOption("-h, --help", "Show help")
   .option(
     "--locale <locale>",
-    "Locale to process",
+    "Show status for specific locales only (can be used multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--bucket <bucket>",
-    "Bucket to process",
+    "Show status for specific buckets only (can be used multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--file [files...]",
-    "File to process. Process only files that include this string in their path. Useful if you have a lot of files and want to focus on a specific one. Specify more files separated by commas or spaces.",
+    "Show status for files matching these patterns only",
   )
   .option(
     "--force",
-    "Ignore lockfile and process all keys, useful for estimating full re-translation",
+    "Count all source keys as needing translation, ignoring change tracking",
   )
-  .option("--verbose", "Show detailed output including key-level word counts")
+  .option("--verbose", "Show detailed breakdown including individual missing/updated keys")
   .option(
     "--api-key <api-key>",
-    "Explicitly set the API key to use, override the default API key from settings",
+    "Override API key from settings or environment",
   )
   .action(async function (options) {
     const ora = Ora();

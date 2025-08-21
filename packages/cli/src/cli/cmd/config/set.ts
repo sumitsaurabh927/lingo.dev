@@ -10,10 +10,10 @@ import {
 
 export default new Command()
   .name("set")
-  .description("Set a configuration key to a value")
+  .description("Set a configuration value")
   .addHelpText("afterAll", `\nAvailable keys:\n  ${SETTINGS_KEYS.join("\n  ")}`)
-  .argument("<key>", "Configuration key to set")
-  .argument("<value>", "New value")
+  .argument("<key>", "Configuration key (e.g., auth.apiKey, llm.openaiApiKey)")
+  .argument("<value>", "Value to set")
   .helpOption("-h, --help", "Show help")
   .action(async (key: string, value: string) => {
     if (!SETTINGS_KEYS.includes(key)) {

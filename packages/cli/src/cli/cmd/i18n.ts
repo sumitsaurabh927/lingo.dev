@@ -29,53 +29,53 @@ import { flatten, unflatten } from "flat";
 
 export default new Command()
   .command("i18n")
-  .description("Run Localization engine")
+  .description("Translate content using AI to generate localized versions for all target languages")
   .helpOption("-h, --help", "Show help")
   .option(
     "--locale <locale>",
-    "Locale to process",
+    "Only process specific target locales (can be used multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--bucket <bucket>",
-    "Bucket to process",
+    "Only process specific buckets (can be used multiple times)",
     (val: string, prev: string[]) => (prev ? [...prev, val] : [val]),
   )
   .option(
     "--key <key>",
-    "Key to process. Process only a specific translation key, useful for debugging or updating a single entry",
+    "Only process a specific translation key",
   )
   .option(
     "--file [files...]",
-    "File to process. Process only a specific path, may contain asterisk * to match multiple files. Useful if you have a lot of files and want to focus on a specific one. Specify more files separated by commas or spaces.",
+    "Only process specific file paths (supports wildcards with *)",
   )
   .option(
     "--frozen",
-    `Run in read-only mode - fails if any translations need updating, useful for CI/CD pipelines to detect missing translations`,
+    "Validation mode: exit with error if translations are outdated (useful in CI/CD)",
   )
   .option(
     "--force",
-    "Ignore lockfile and process all keys, useful for full re-translation",
+    "Re-translate all keys, ignoring the lockfile cache",
   )
   .option(
     "--verbose",
-    "Show detailed output including intermediate processing data and API communication details",
+    "Show detailed progress information and processing data",
   )
   .option(
     "--interactive",
-    "Enable interactive mode for reviewing and editing translations before they are applied",
+    "Review and edit translations before applying changes",
   )
   .option(
     "--api-key <api-key>",
-    "Explicitly set the API key to use, override the default API key from settings",
+    "Override the API key from environment or settings file",
   )
   .option(
     "--debug",
-    "Pause execution at start for debugging purposes, waits for user confirmation before proceeding",
+    "Pause at startup for debugging",
   )
   .option(
     "--strict",
-    "Stop processing on first error instead of continuing with other locales/buckets",
+    "Stop on first error instead of continuing with remaining items",
   )
   .action(async function (options) {
     updateGitignore();

@@ -36,15 +36,15 @@ const throwHelpError = (option: string, value: string) => {
 
 export default new InteractiveCommand()
   .command("init")
-  .description("Initialize Lingo.dev project")
+  .description("Set up a new Lingo.dev project in the current directory")
   .helpOption("-h, --help", "Show help")
   .addOption(
-    new InteractiveOption("-f --force", "Overwrite existing config")
+    new InteractiveOption("-f --force", "Overwrite existing i18n.json configuration file")
       .prompt(undefined)
       .default(false),
   )
   .addOption(
-    new InteractiveOption("-s --source <locale>", "Source locale")
+    new InteractiveOption("-s --source <locale>", "Source language code (e.g., en, fr, de)")
       .argParser((value) => {
         try {
           resolveLocaleCode(value as LocaleCode);
@@ -56,7 +56,7 @@ export default new InteractiveCommand()
       .default("en"),
   )
   .addOption(
-    new InteractiveOption("-t --targets <locale...>", "List of target locales")
+    new InteractiveOption("-t --targets <locale...>", "Target language codes to translate into (space or comma-separated)")
       .argParser((value) => {
         const values = (
           value.includes(",") ? value.split(",") : value.split(" ")
@@ -73,7 +73,7 @@ export default new InteractiveCommand()
       .default("es"),
   )
   .addOption(
-    new InteractiveOption("-b, --bucket <type>", "Type of bucket")
+    new InteractiveOption("-b, --bucket <type>", "Translation file format (json, arb, yaml, etc.)")
       .argParser((value) => {
         if (!bucketTypes.includes(value as (typeof bucketTypes)[number])) {
           throwHelpError("bucket format", value);
@@ -85,7 +85,7 @@ export default new InteractiveCommand()
   .addOption(
     new InteractiveOption(
       "-p, --paths [path...]",
-      "List of paths for the bucket",
+      "File paths to include in translation bucket (space or comma-separated)",
     )
       .argParser((value) => {
         if (!value || value.length === 0) return [];

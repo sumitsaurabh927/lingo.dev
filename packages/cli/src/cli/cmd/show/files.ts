@@ -8,14 +8,14 @@ import { resolveOverriddenLocale } from "@lingo.dev/_spec";
 
 export default new Command()
   .command("files")
-  .description("Print out the list of files managed by Lingo.dev")
+  .description("List translation file paths from your i18n.json configuration")
   .option(
     "--source",
-    "Only show source files, files containing the original translations",
+    "Only show source locale files (containing original text to translate)",
   )
   .option(
     "--target",
-    "Only show target files, files containing translated content",
+    "Only show target locale files (containing translated text)",
   )
   .helpOption("-h, --help", "Show help")
   .action(async (type) => {

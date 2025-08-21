@@ -10,9 +10,9 @@ import {
 
 export default new Command()
   .name("unset")
-  .description("Remove a configuration key")
+  .description("Remove a configuration value")
   .addHelpText("afterAll", `\nAvailable keys:\n  ${SETTINGS_KEYS.join("\n  ")}`)
-  .argument("<key>", "Configuration key to remove")
+  .argument("<key>", "Configuration key to remove (e.g., auth.apiKey, llm.openaiApiKey)")
   .helpOption("-h, --help", "Show help")
   .action(async (key: string) => {
     // Validate key first (defensive; choices() should already restrict but keep for safety).
