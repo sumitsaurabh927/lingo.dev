@@ -56,7 +56,7 @@ export default new InteractiveCommand()
       .default("en"),
   )
   .addOption(
-    new InteractiveOption("-t --targets <locale...>", "Target language codes to translate into (space or comma-separated)")
+    new InteractiveOption("-t --targets <locale...>", "Target locale codes to translate into (space or comma-separated)")
       .argParser((value) => {
         const values = (
           value.includes(",") ? value.split(",") : value.split(" ")
