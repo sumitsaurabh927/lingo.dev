@@ -14,7 +14,7 @@ export default new Command()
   )
   .option(
     "--logout",
-    "(deprecated - use 'lingo logout' command)",
+    "(deprecated - use 'lingo.dev logout' command)",
   )
   .action(async (options) => {
     try {
