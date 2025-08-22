@@ -51,7 +51,7 @@ export default new Command()
   )
   .option(
     "--frozen",
-    "Validation mode: exit with error if translations are outdated (useful in CI/CD)",
+    "Exit with error if translations are outdated",
   )
   .option(
     "--force",
