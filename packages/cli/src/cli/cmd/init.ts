@@ -44,7 +44,7 @@ export default new InteractiveCommand()
       .default(false),
   )
   .addOption(
-    new InteractiveOption("-s --source <locale>", "Source language code (e.g., en, fr, de)")
+    new InteractiveOption("-s --source <locale>", "Source locale code (e.g., en, fr, de)")
       .argParser((value) => {
         try {
           resolveLocaleCode(value as LocaleCode);
