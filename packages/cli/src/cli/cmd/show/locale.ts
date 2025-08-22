@@ -9,7 +9,7 @@ export default new Command()
   .command("locale")
   .description("Show all supported locale codes (includes variants like en-US, en_US, etc.)")
   .helpOption("-h, --help", "Show help")
-  .argument("<type>", 'Must be "sources" or "targets" (both show the same complete list)')
+  .argument("<type>", 'Must be "sources" or "targets"')
   .action(async (type) => {
     const ora = Ora();
     try {
