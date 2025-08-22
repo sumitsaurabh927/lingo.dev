@@ -16,7 +16,7 @@ export const colors = {
 
 export default new Command()
   .command("may-the-fourth")
-  .description("Watch ASCII Star Wars movie via SSH connection")
+  .description("May the Fourth be with you")
   .helpOption("-h, --help", "Show help")
   .action(async () => {
     await renderClear();
