@@ -10,7 +10,7 @@ export default new Command()
   // Deprecated options, safe to remove after September 2025
   .option(
     "--login",
-    "(deprecated - use 'lingo login' command)",
+    "(deprecated - use 'lingo.dev login' command)",
   )
   .option(
     "--logout",
