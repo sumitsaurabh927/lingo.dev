@@ -27,6 +27,7 @@
   <a href="https://github.com/lingodotdev/lingo.dev/commits/main">
     <img src="https://img.shields.io/github/last-commit/lingodotdev/lingo.dev" alt="Last Commit" />
   </a>
+  <a href="https://www.producthunt.com/products/lingodotdev?embed=true&utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_source=badge-lingodotdev" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=426264&theme=light&period=monthly&topic_id=267&t=1756130501747" alt="Lingo&#0046;dev - ⚡️&#0032;Ship&#0032;apps&#0032;translated&#0032;in&#0032;every&#0032;language&#0044;&#0032;in&#0032;minutes&#0033; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </p>
 
 ---
